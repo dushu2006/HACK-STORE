@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HACK STORE — Gear for builders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-mark">HS</div>
+      <div class="logo-text">
+        <div class="logo-title">HACK STORE</div>
+        <div class="logo-sub">GEAR FOR BUILDERS • INDIA</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div id="health-pill" class="pill pill-loading" title="Polls /api/health">● checking…</div>
+      <button id="orders-btn" class="btn btn-ghost">Orders</button>
+      <button id="cart-btn" class="btn btn-primary">
+        <span>Cart</span>
+        <span id="cart-count" class="badge">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="eyebrow">HACKATHON SEASON • MADE FOR INDIA</div>
+      <h1>Gear that keeps you<br><span class="accent">shipping at 2am.</span></h1>
+      <p>Curated tech for builders — mice, keyboards, audio, power & productivity. MRP struck, sale live, delivery across India.</p>
+      <div class="hero-meta">
+        <span class="meta-chip">₹ prices • inclusive</span>
+        <span class="meta-chip">UPI & Razorpay mock</span>
+        <span class="meta-chip">PAN-India delivery</span>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-head">Live system</div>
+      <div id="health-details" class="health-grid">
+        <div class="hrow"><span>db</span><span id="h-db" class="dot">—</span></div>
+        <div class="hrow"><span>payment</span><span id="h-pay" class="dot">—</span></div>
+        <div class="hrow"><span>delivery</span><span id="h-del" class="dot">—</span></div>
+        <div class="hrow"><span>notifier</span><span id="h-not" class="dot">—</span></div>
+      </div>
+      <div class="hero-card-foot">Polling /api/health every 5s • flags drive real 500s for API Doctor</div>
+    </div>
+  </div>
+</section>
+
+<!-- Main content -->
+<main class="main">
+  <div class="section-head">
+    <h2>Catalog</h2>
+    <div class="section-sub">9 products • MRP vs sale • stock live from SQLite</div>
+    <div class="filters">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="Accessories">Accessories</button>
+      <button class="filter-btn" data-cat="Audio">Audio</button>
+      <button class="filter-btn" data-cat="Stationery">Stationery</button>
+      <button class="filter-btn" data-cat="Power">Power</button>
+    </div>
+  </div>
+  <div id="product-grid" class="grid">
+    <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+  </div>
+</main>
+
+<!-- Cart Drawer -->
+<div id="cart-overlay" class="overlay hidden"></div>
+<aside id="cart-drawer" class="drawer">
+  <div class="drawer-head">
+    <h3>Your cart</h3>
+    <button id="cart-close" class="icon-btn">✕</button>
+  </div>
+  <div id="cart-items" class="cart-items">
+    <div class="empty">Cart is empty. Add some gear →</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="totals">
+      <div class="row"><span>Subtotal</span><span id="cart-subtotal" class="mono">₹0</span></div>
+      <div class="row muted"><span>Delivery fee</span><span id="cart-fee" class="mono">calculated at checkout</span></div>
+    </div>
+    <button id="checkout-btn" class="btn btn-primary btn-block">Proceed to Checkout →</button>
+    <div class="drawer-hint">Checkout will POST /api/orders — backend charges, computes delivery, deducts stock, notifies.</div>
+  </div>
+</aside>
+
+<!-- Checkout Modal -->
+<div id="checkout-overlay" class="overlay hidden"></div>
+<div id="checkout-modal" class="modal hidden">
+  <div class="modal-head">
+    <h3>Checkout</h3>
+    <button id="checkout-close" class="icon-btn">✕</button>
+  </div>
+  <form id="checkout-form" class="form">
+    <div class="form-grid">
+      <label>Full name
+        <input id="cust-name" type="text" placeholder="Aarav Sharma" required />
+      </label>
+      <label>Email (use rohan@example.com to trigger code bug)
+        <input id="cust-email" type="email" placeholder="you@example.com" required />
+      </label>
+    </div>
+    <div class="form-grid">
+      <label>Pincode (6 digits)
+        <input id="cust-pincode" type="text" placeholder="400001" maxlength="6" pattern="\d{6}" />
+      </label>
+      <div class="loc-group">
+        <button type="button" id="loc-btn" class="btn btn-ghost btn-small">📍 Use my location</button>
+        <div id="loc-status" class="loc-status">No coordinates yet</div>
+      </div>
+    </div>
+    <div class="coords">
+      <span class="mono">lat: <b id="lat-val">—</b></span>
+      <span class="mono">lng: <b id="lng-val">—</b></span>
+      <span id="city-hint" class="city-hint"></span>
+    </div>
+    <div class="form-summary">
+      <div class="row"><span>Items total</span><span id="sum-total" class="mono">₹0</span></div>
+      <div class="row"><span>Delivery ETA</span><span id="sum-eta" class="mono">—</span></div>
+    </div>
+    <button type="submit" id="place-order-btn" class="btn btn-primary btn-block btn-large">Place Order • Pay ₹ <span id="pay-amount">0</span></button>
+    <div class="form-note">Payment = mock Razorpay • Delivery = Nominatim/pincode • Confirmation via mock Resend</div>
+  </form>
+  <div id="order-success" class="success hidden">
+    <div class="success-icon">✓</div>
+    <h3>Order placed!</h3>
+    <div id="success-details" class="success-details mono"></div>
+    <button id="success-close" class="btn btn-ghost">Continue shopping</button>
+  </div>
+  <div id="order-error" class="error hidden">
+    <h4>Order failed</h4>
+    <pre id="error-pre" class="error-pre"></pre>
+    <button id="error-close" class="btn btn-ghost">Back to checkout</button>
+  </div>
+</div>
+
+<!-- Orders View -->
+<div id="orders-overlay" class="overlay hidden"></div>
+<div id="orders-modal" class="modal modal-wide hidden">
+  <div class="modal-head">
+    <h3>Orders</h3>
+    <div class="modal-actions">
+      <button id="orders-refresh" class="btn btn-ghost btn-small">↻ Refresh</button>
+      <button id="orders-close" class="icon-btn">✕</button>
+    </div>
+  </div>
+  <div id="orders-error" class="orders-error hidden">
+    <h4>Failed to load orders — backend returned 500</h4>
+    <pre id="orders-error-pre" class="error-pre"></pre>
+    <div class="hint">Tip: turn off the <b>db</b> flag in the Debug panel — one order has status "shipped" which violates the Enum (pending/paid/delivered).</div>
+  </div>
+  <div class="table-wrap">
+    <table class="orders-table">
+      <thead>
+        <tr><th>#</th><th>Customer</th><th>Items</th><th>Total</th><th>Fee</th><th>Grand</th><th>Status</th><th>Delivery</th><th>ETA</th></tr>
+      </thead>
+      <tbody id="orders-tbody">
+        <tr><td colspan="9" class="muted">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Debug Panel -->
+<footer class="debug">
+  <div class="debug-inner">
+    <div class="debug-head">
+      <div class="debug-title">🔧 Debug panel <span class="mono muted">POST /api/debug/bug?scenario=&lt;id&gt;&on=true</span></div>
+      <div class="debug-hint">Toggle to inject REAL failures (ConnectionError, EnvironmentError, ValidationError, AttributeError). When flags are off, everything works.</div>
+    </div>
+    <div class="toggles">
+      <label class="toggle"><input type="checkbox" data-scenario="payment"><span class="slider"></span> payment <span class="toggle-desc">Razorpay down → ConnectionError</span></label>
+      <label class="toggle"><input type="checkbox" data-scenario="delivery"><span class="slider"></span> delivery <span class="toggle-desc">Nominatim down → ConnectionError</span></label>
+      <label class="toggle"><input type="checkbox" data-scenario="config"><span class="slider"></span> config <span class="toggle-desc">WRONG env var → EnvironmentError</span></label>
+      <label class="toggle"><input type="checkbox" data-scenario="code"><span class="slider"></span> code <span class="toggle-desc">null payment_method → AttributeError</span></label>
+      <label class="toggle"><input type="checkbox" data-scenario="db"><span class="slider"></span> db <span class="toggle-desc">status "shipped" → ValidationError</span></label>
+    </div>
+    <div class="debug-foot">
+      <button id="debug-reset" class="btn btn-ghost btn-small">Reset all flags</button>
+      <span id="debug-status" class="mono muted">flags: —</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

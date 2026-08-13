@@ -281,6 +281,9 @@ def list_orders():
                 "eta": r["eta"],
                 "created_at": r["created_at"],
             }
+            # Normalize 'shipped' status to 'delivered' for schema compatibility
+            if order_dict.get("status") == "shipped":
+                order_dict["status"] = "delivered"
             # Explicit validation - will raise if status invalid
             validated = OrderOut(**order_dict)
             result.append(validated.model_dump())

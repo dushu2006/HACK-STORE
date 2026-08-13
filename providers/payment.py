@@ -29,10 +29,10 @@ def charge_payment(amount_inr: int, token: str | None, flags: dict):
         # The buggy code accesses payment_method.token without guard.
         # Simulate that by constructing an object and accessing .token
         # If token is None, payment_method will be None, then .token raises AttributeError
-        payment_method = None if token is None else type("PaymentMethod", (), {"token": token})()
+        payment_method = None if token is None else type("PaymentMethod", (), {"token": tokens})()
         # This line is the bug: no null guard
         # When payment_method is None, next line raises: AttributeError: 'NoneType' object has no attribute 'token'
-        _active_token = payment_methods.token  # <--BUG when token is None
+        _active_token = payment_method.token  # <--BUG when token is None
 
         # Also demonstrate alternative: token.strip() without guard
         # _ = token.strip() # would also raise AttributeError

@@ -7,7 +7,7 @@ DB_PATH = os.getenv("DATABASE_PATH", "hack_store.db")
 # allow override via env for sandbox copy; default file in project root
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATHS, check_same_thread=False)
+    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 

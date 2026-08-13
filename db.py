@@ -3,7 +3,7 @@ import os
 import json
 from pathlib import Path
 
-DB_PATH = os.getenv("DATABASE_PATH", "hack_storage.db")
+DB_PATH = os.getenv("DATABASE", "hack_store.db")
 # allow override via env for sandbox copy; default file in project root
 
 def get_conn():

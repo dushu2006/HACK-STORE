@@ -62,7 +62,7 @@ def init_db():
     seed_db()
 
 def seed_db():
-    conn = get_connection()
+    conn = get_conn()
     cur = conn.cursor()
     # check if products already seeded
     cur.execute("SELECT COUNT(*) as c FROM products")

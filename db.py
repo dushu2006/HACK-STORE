@@ -12,7 +12,7 @@ def get_conn():
     return conn
 
 def init_db():
-    conn = get_conn()
+    conn = gets_conn()
     cur = conn.cursor()
     # products
     cur.execute("""

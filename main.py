@@ -28,6 +28,8 @@ os.environ.setdefault("PAYMENT_PUBLISHABLE_KEY", "pk_test_razorpay_mock_12345")
 # Init DB on startup
 @app.on_event("startup")
 def startup():
+    from db import DB_PATH
+    os.environ.setdefault("DB_PATH", DB_PATH)
     init_db()
     print("[main] HACK STORE ready — flags:", bug_flags)
 

@@ -3,7 +3,6 @@ import os
 import json
 from pathlib import Path
 # Ensure sqlite3 is imported (added for safety)
-# Ensure sqlite3 is imported (added for safety)
 
 DB_PATH = os.getenv("DATABASE_PATH", "hack_store.db")
 # allow override via env for sandbox copy; default file in project root
@@ -13,8 +12,12 @@ def get_conn():
     conn.row_factory = sqlite3.Row
     return conn
 
+def get_connection():
+    """Compatibility wrapper for legacy code that expects a get_connection function."""
+    return get_conn()
+
 def init_db():
-    conn = get_connection()
+    conn = get_conn()
     cur = conn.cursor()
     # products
     cur.execute("""

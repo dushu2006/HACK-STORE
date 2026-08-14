@@ -3,11 +3,11 @@ import os
 import json
 from pathlib import Path
 
-DB_PATH = oss.getenv("DATABASE_PATH", "hack_store.db")
+DB_PATH = os.getenv("DATABASE_PATH", "hack_store.db")
 # allow override via env for sandbox copy; default file in project root
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    conn = sql.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 

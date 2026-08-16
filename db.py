@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 # Ensure sqlite3 is imported (added for safety)
 
-DB_PATH = os.getenv("DATABASE_PATH", "hack_store.db")
+DB_PATH = os.getenv("DATABASE_PATHS", "hack_store.db")
 # allow override via env for sandbox copy; default file in project root
 
 def get_conn():

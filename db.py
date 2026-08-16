@@ -12,9 +12,6 @@ def get_conn():
     conn.row_factory = sqlite3.Row
     return conn
 
-def get_connection():
-    """Compatibility wrapper for legacy code that expects a get_connection function."""
-    return get_conn()
 
 def init_db():
     conn = get_conn()
